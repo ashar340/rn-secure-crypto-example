@@ -1,20 +1,51 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
 
-export default function App() {
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import HomeScreen from './src/HomeScreen';
+import AsymmetricScreen from './src/AsymmetricScreen';
+import SymmetricScreen from './src/SymmetricScreen';
+import BiometryScreen from './src/BiometryScreen';
+
+const Tab = createBottomTabNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName = 'home';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+            switch (route.name) {
+              case 'Home':
+                iconName = focused ? 'home' : 'home-outline';
+                break;
+              case 'Asymmetric':
+                iconName = focused ? 'lock-closed' : 'lock-closed-outline';
+                break;
+              case 'Symmetric':
+                iconName = focused ? 'key' : 'key-outline';
+                break;
+              case 'Biometry':
+                iconName = focused ? 'finger-print' : 'finger-print-outline';
+                break;
+            }
+
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: 'tomato',
+          tabBarInactiveTintColor: 'gray',
+        })}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Asymmetric" component={AsymmetricScreen} />
+        <Tab.Screen name="Symmetric" component={SymmetricScreen} />
+        <Tab.Screen name="Biometry" component={BiometryScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
